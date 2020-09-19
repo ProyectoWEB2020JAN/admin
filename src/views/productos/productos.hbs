@@ -1,0 +1,235 @@
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<script>
+	$(document).ready(function () {
+		$(document).on('change', '.btn-file :file', function () {
+			var input = $(this),
+				label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+			input.trigger('fileselect', [label]);
+		});
+
+		$('.btn-file :file').on('fileselect', function (event, label) {
+
+			var input = $(this).parents('.input-group').find(':text'),
+				log = label;
+
+			if (input.length) {
+				input.val(log);
+			} else {
+				if (log) alert(log);
+			}
+
+		});
+		function readURL(input) {
+			if (input.files && input.files[0]) {
+				var reader = new FileReader();
+
+				reader.onload = function (e) {
+					$('#img-upload').attr('src', e.target.result);
+				}
+
+				reader.readAsDataURL(input.files[0]);
+			}
+		}
+
+		$("#imgInp").change(function () {
+			readURL(this);
+		});
+	});
+
+</script>
+
+{{> nav}}
+<main class="admin__main">
+	<div class="dashboard__item">
+		<div class="card text-white bg-dark pt-0">
+			<main class="admin__main"></main>
+			<strong style="text-align: center;">AGREGAR PRODUCTOS</strong>
+			<div class="card-body">
+				<form method="POST" action="/subirProducto">
+					<div class="row">
+						<div class="col md-6 mr-3">
+							<div class="form-group">
+								<label for="nameItem">Nombre</label>
+								<input required id="nameItem" type="text" class="form-control"
+									aria-describedby="nameItem" placeholder="Ingrese el nombre del producto"
+									name="nombre">
+							</div>
+							<div class="form-group">
+								<label for="Type">Tipo</label>
+								<select required class="form-control" id="Type" name="tipo">
+									<option>Porcion</option>
+									<option>Completa</option>
+								</select>
+							</div>
+							<div class="form-group">
+								<label for="inputPrecio">Precio</label>
+								<input required id="inputPrecio" type="number" class="form-control"
+									aria-describedby="Cost" placeholder="Ingrese el precio del producto" name="precio">
+							</div>
+						</div>
+						<div class="col md-6 ml-3">
+							<div class="form-group">
+								<label for="description">Descripcion</label>
+								<textarea required class="form-control" id="description" rows="3"
+									name="descripcion"></textarea>
+							</div>
+							<div class="form-group">
+								<label for="imgInp">Imagen Del Producto</label>
+								<div class="input-group">
+									<div class="input-group-append">
+										<span class="btn btn-default btn-file"
+											style="color:aliceblue; background-color: #D97B29;">
+											Subir <input required id="imgInp" type="file" name="imgProducto">
+										</span>
+									</div>
+									<input type="text" class="form-control" readonly>
+								</div>
+								<img id='img-upload' />
+							</div>
+						</div>
+					</div>
+					<div class="pl-5 pr-5">
+						<button type="submit" class="btn btn-warning btn-block mt-5" data-toggle="modal"
+							data-target="#exampleModal">Guardar</button>
+					</div>
+				</form>
+			</div>
+
+		</div>
+		<div class="card mt-5">
+			<h5 class="card-header bg-white mb-5" style="font-size: larger;text-align: center;">SUS PRODUCTOS:</h5>
+			<div class="card-body">
+				<div id="lista-productos" class="container-fostrap">
+					<div>
+						<h1 class="heading mb-5">
+							Porciones de pizza
+						</h1>
+					</div>
+					<div class="content">
+						<div class="container">
+							<div class="row">
+								{{#if products.Porciones}}
+								{{#each products.Porciones}}
+								<div class="col-xs-12 col-sm-4">
+									<div class="card mb-2">
+										<a class="img-card">
+											<img src="https://www.hosteleriasalamanca.es/fotos/1533025888.6461.jpg" />
+										</a>
+										<div class=" card-content-custom">
+											<h4 class="card-title">
+												{{nombre}}
+											</h4>
+											<p class="bold"> {{precio}}</p>
+										</div>
+										<div class="card-read-more">
+											<div class="modal fade" id="{{idProducto}}" tabindex="-1"
+												aria-labelledby="exampleModalLabel" aria-hidden="true">
+												<div class="modal-dialog modal-dialog-centered">
+													<div class="modal-content">
+														<div class="modal-header">
+															<h5 class="modal-title" id="exampleModalLabel">{{nombre}}
+															</h5>
+															<button type="button" class="close" data-dismiss="modal"
+																aria-label="Close">
+																<span aria-hidden="true">&times;</span>
+															</button>
+														</div>
+														<div class="modal-body">
+															<img
+																src="https://www.hosteleriasalamanca.es/fotos/1533025888.6461.jpg" />
+															<p>{{descripcion}}</p>
+															<p class="bold"> {{precio}}</p>
+														</div>
+														<div class="modal-footer">
+															<button type="button" class="btn btn-secondary"
+																data-dismiss="modal">Close</button>
+														</div>
+													</div>
+												</div>
+											</div>
+											<button type="button" class="btn btn-warning" data-toggle="modal"
+												data-target="#{{idProducto}}">
+												ver
+											</button>
+											<a href="/eliminarProducto/{{idProducto}}"
+												class="btn btn-danger">eliminar</a>
+										</div>
+									</div>
+								</div>
+								{{/each}}
+								{{else}}
+								<h3>not products in db</h3>
+								{{/if}}
+							</div>
+						</div>
+					</div>
+
+					<div>
+						<h1 class="heading mt-5 mb-5">
+							Pizzas enteras
+						</h1>
+					</div>
+					<div class="content">
+						<div class="container">
+							<div class="row">
+								{{#if products.Completas}}
+								{{#each products.Completas}}
+								<div class="col-xs-12 col-sm-4">
+									<div class="card mb-2">
+										<a class="img-card">
+											<img src="https://www.hosteleriasalamanca.es/fotos/1533025888.6461.jpg" />
+										</a>
+										<div class=" card-content-custom">
+											<h4 class="card-title">
+												{{nombre}}
+											</h4>
+											<p class="bold"> {{precio}}</p>
+										</div>
+										<div class="card-read-more">
+											<button type="button" class="btn btn-warning" data-toggle="modal"
+												data-target="#{{idProducto}}">
+												ver
+											</button>
+											<div class="modal fade" id="{{idProducto}}" tabindex="-1"
+												aria-labelledby="exampleModalLabel" aria-hidden="true">
+												<div class="modal-dialog modal-dialog-centered">
+													<div class="modal-content">
+														<div class="modal-header">
+															<h5 class="modal-title" id="exampleModalLabel">{{nombre}}
+															</h5>
+															<button type="button" class="close" data-dismiss="modal"
+																aria-label="Close">
+																<span aria-hidden="true">&times;</span>
+															</button>
+														</div>
+														<div class="modal-body">
+															<img
+																src="https://www.hosteleriasalamanca.es/fotos/1533025888.6461.jpg" />
+															<p>{{descripcion}}</p>
+															<p class="bold"> {{precio}}</p>
+														</div>
+														<div class="modal-footer">
+															<button type="button" class="btn btn-secondary"
+																data-dismiss="modal">Close</button>
+														</div>
+													</div>
+												</div>
+											</div>
+											<a href="/eliminarProducto/{{idProducto}}"
+												class="btn btn-danger">eliminar</a>
+										</div>
+									</div>
+								</div>
+								{{/each}}
+								{{else}}
+								<h3>not products in db</h3>
+								{{/if}}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</main>
+{{> footer}}

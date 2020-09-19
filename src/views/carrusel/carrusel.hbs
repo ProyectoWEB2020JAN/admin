@@ -1,0 +1,98 @@
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<script>
+	$(document).ready(function () {
+		$(document).on('change', '.btn-file :file', function () {
+			var input = $(this),
+				label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+			input.trigger('fileselect', [label]);
+		});
+
+		$('.btn-file :file').on('fileselect', function (event, label) {
+
+			var input = $(this).parents('.input-group').find(':text'),
+				log = label;
+
+			if (input.length) {
+				input.val(log);
+			} else {
+				if (log) alert(log);
+			}
+
+		});
+		function readURL(input) {
+			if (input.files && input.files[0]) {
+				var reader = new FileReader();
+
+				reader.onload = function (e) {
+					$('#img-upload').attr('src', e.target.result);
+				}
+
+				reader.readAsDataURL(input.files[0]);
+			}
+		}
+
+		$("#imgInp").change(function () {
+			readURL(this);
+		});
+	});
+
+</script>
+
+{{> nav}}
+
+<main class="admin__main">
+	<div class="dashboard__item">
+		<div class="card">
+			<strong style="text-align: center;">AGREGAR OFERTAS</strong>
+
+			<div class="card-body pl-5 pr-5">	
+				<form>
+					<div class="col">
+						<div class="form-group">
+							<label>Subir Imagen</label>
+							<div class="input-group">
+									<div class="input-group-append">
+										<span class="btn btn-default btn-file"
+											style="color:aliceblue; background-color: #D97B29;">
+											Subir <input id="imgInp" type="file" name="imgProducto">
+										</span>
+									</div>
+									<input type="text" class="form-control" readonly>
+								</div>
+							<img id='img-upload' />
+						</div>
+					</div>
+					<button type="submit" class="btn btn-warning ">Guardar</button>
+				</form>
+
+			</div>
+		</div>
+
+		<div class="dashboard__item">
+			<div class="card">
+				<strong>Mostrado en el carrucel:</strong>
+				<div class="content">
+					<div class="container">
+						<div class="row">
+							<div class="col-xs-12 col-sm-4">
+								<div class="card mb-2">
+									<a class="img-card">
+										<img src="https://www.hosteleriasalamanca.es/fotos/1533025888.6461.jpg" />
+									</a>
+									<div class="custom-row">
+										<div class="card-read-more">
+											<a style="color: white;" data-id="8" class="btn btn-danger btn-block">
+												Elminar Imagen
+											</a>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+</main>
+{{> footer}}

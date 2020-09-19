@@ -1,0 +1,30 @@
+{{> nav}}
+<main class="admin__main">
+  {{> subnav}}
+  <div class="dashboard__item">
+    <div class="card">
+      <strong style="text-align: center;">VER PEDIDOS</strong>
+      <table class="table mt-3" style="font-size:large">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Usuario</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#if esencial.pedidos.aceptados}}
+          {{#each esencial.pedidos.aceptados}}
+          <tr>
+            <th scope="row">{{producto}}</th>
+            <td>{{precio}}</td>
+          </tr>
+          {{/each}} 
+          {{else}}
+          <h3>not request jet</h3>
+          {{/if}}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>
+{{> footer  }}
