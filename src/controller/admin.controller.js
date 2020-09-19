@@ -107,6 +107,8 @@ controlador.eliminarProductos = (req, res) => {
   res.redirect("productos/productos");
 };
 
+const controlador.agregarproductos = (req,res)
+
 const importPedidos = () => {
   return new Promise((resolve) => {
     let pedidosuser;
